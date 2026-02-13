@@ -1,17 +1,13 @@
-# GC-60: A Forward Extension
-## List-Based Structural Sieve (Experimental)
+# GC-60: Structural Sieve Extension (Experimental)
 
 ---
 
 ## Overview
 
-This project is an experimental evolution of the GC-60 prime generation method.
+This project represents an experimental evolution of the GC-60 prime generation method.
+While the standard GC-60 operates via modular reduction (mod 60), segmented storage, and arithmetic elimination of multiples, this branch introduces a different operational model: Precomputed Structural Masks.
 
-GC-60 operates through modular reduction (mod 60), segmented storage, and arithmetic elimination of multiples.  
-This experimental branch introduces a different operational model: instead of generating multiples procedurally, it applies precomputed structural masks.
-
-This implementation does not replace MicroPrime.  
-It explores a different representation of composite elimination.
+Note: This implementation does not replace **MicroPrime**. It is an exploration of a different representation of composite elimination.
 
 ---
 
