@@ -1,27 +1,3 @@
-/*
-    GC-60 Forward
-    List-Based Structural Sieve (Experimental)
-
-    Version: 0.1
-    Status: Experimental
-    Author: [Govi Claudio]
-    Date: 2026-02-12
-
-    Description:
-    Structural extension of the GC-60 prime sieve.
-    Replaces runtime multiple generation with modular bitmask propagation.
-
-    Each 60-number block is compressed into 16 residue classes.
-    Composite elimination is performed by periodic application
-    of precomputed modular masks rather than repeated arithmetic propagation.
-
-    This implementation is written in C++ to evaluate structural
-    efficiency with minimal abstraction overhead.
-
-    No claim of asymptotic breakthrough.
-    No claim of replacing industrial prime sieves.
-*/
-
 // 1. QUESTA RIGA DEVE ESSERE LA PRIMA IN ASSOLUTO
 #define _CRT_SECURE_NO_WARNINGS 
 
@@ -42,7 +18,7 @@ typedef unsigned long long u64;
 // ----------------------------
 // Configurazione
 // ----------------------------
-const u64 CERCA_IN = 100000000000ULL; // 9 MILIARDI
+const u64 CERCA_IN = 100000000ULL; // 9 MILIARDI
 const int RESIDUI[] = { 1, 3, 7, 9, 13, 19, 21, 27, 31, 33, 37, 39, 43, 49, 51, 57 };
 const int NUM_RESIDUI = 16;
 
@@ -195,7 +171,7 @@ int main() {
 
     // 1. Manuale p=7
     u64 p_start = 7;
-    //elimina_primo(p_start); // Scommenta se vuoi fare il 7 separatamente, ma il ciclo sotto lo gestisce
+    elimina_primo(p_start); // Scommenta se vuoi fare il 7 separatamente, ma il ciclo sotto lo gestisce
 
     // 2. Limite
     u64 max_copertura = n_sottoliste * 60 + 60;
@@ -229,30 +205,50 @@ int main() {
     std::cout << "Scansione completata." << std::endl;
     std::cout << "Tempo Totale (Scansione fino a " << limite << "): " << diff.count() << " secondi" << std::endl;
 
-    // Verifica
+    // Verifica personalizzata
     char risposta;
-    std::cout << "\nVuoi verificare? (s/n): ";
+    std::cout << "\nVuoi verificare la presenza di multipli di un numero specifico? (s/n): ";
     std::cin >> risposta;
 
     if (risposta == 's' || risposta == 'S') {
-        std::cout << "\n--- Controllo casuale ---" << std::endl;
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<u64> dist(0, n_sottoliste - 1);
+        u64 P;
+        std::cout << "Inserisci il numero primo (divisore) da testare: ";
+        std::cin >> P;
 
-        for (int i = 0; i < 5; i++) {
-            u64 R = dist(gen);
-            uint16_t mask = lista[R];
-            u64 base = R * 60 + 10;
+        if (P == 0) {
+            std::cout << "Errore: il divisore non può essere zero." << std::endl;
+        }
+        else {
+            std::cout << "\n--- Controllo casuale a campione per il divisore: " << P << " ---" << std::endl;
 
-            std::cout << "\nLista " << R << " (Base " << base << ")" << std::endl;
-            for (int bit = 0; bit < 16; bit++) {
-                if (mask & (1 << bit)) {
-                    u64 numero = base + RESIDUI[bit];
-                    if (numero > 49 && numero % 7 == 0)
-                        std::cout << "ERRORE: " << numero << " (divisibile per 7)" << std::endl;
-                    else
-                        std::cout << "OK candidato: " << numero << std::endl;
+            // Generatore di numeri casuali per selezionare le sottoliste
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<u64> dist(0, n_sottoliste - 1);
+
+            // Test su 5 liste estratte a sorte
+            for (int i = 0; i < 5; i++) {
+                u64 R = dist(gen);
+                uint16_t mask = lista[R];
+                u64 base = R * 60 + 10;
+
+                std::cout << "\nAnalisi Lista " << R << " (Base " << base << ")" << std::endl;
+                bool trovato_errore = false;
+
+                for (int bit = 0; bit < 16; bit++) {
+                    if (mask & (1 << bit)) {
+                        u64 numero = base + RESIDUI[bit];
+
+                        // Verifica se il candidato è un multiplo di P (e non è P stesso)
+                        if (numero > P && numero % P == 0) {
+                            std::cout << "  >> ERRORE: " << numero << " e' multiplo di " << P << std::endl;
+                            trovato_errore = true;
+                        }
+                    }
+                }
+
+                if (!trovato_errore) {
+                    std::cout << "  >> OK: Nessun multiplo di " << P << " trovato." << std::endl;
                 }
             }
         }
