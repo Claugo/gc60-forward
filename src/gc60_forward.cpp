@@ -1,3 +1,27 @@
+/*
+    GC-60 Forward
+    List-Based Structural Sieve (Experimental)
+
+    Version: 0.1
+    Status: Experimental
+    Author: [Govi Claudio]
+    Date: 2026-02-12
+
+    Description:
+    Structural extension of the GC-60 prime sieve.
+    Replaces runtime multiple generation with modular bitmask propagation.
+
+    Each 60-number block is compressed into 16 residue classes.
+    Composite elimination is performed by periodic application
+    of precomputed modular masks rather than repeated arithmetic propagation.
+
+    This implementation is written in C++ to evaluate structural
+    efficiency with minimal abstraction overhead.
+
+    No claim of asymptotic breakthrough.
+    No claim of replacing industrial prime sieves.
+*/
+
 // 1. QUESTA RIGA DEVE ESSERE LA PRIMA IN ASSOLUTO
 #define _CRT_SECURE_NO_WARNINGS 
 
@@ -18,7 +42,7 @@ typedef unsigned long long u64;
 // ----------------------------
 // Configurazione
 // ----------------------------
-const u64 CERCA_IN = 100000000ULL; // 9 MILIARDI
+const u64 CERCA_IN = 1000000000ULL; // 9 MILIARDI
 const int RESIDUI[] = { 1, 3, 7, 9, 13, 19, 21, 27, 31, 33, 37, 39, 43, 49, 51, 57 };
 const int NUM_RESIDUI = 16;
 
