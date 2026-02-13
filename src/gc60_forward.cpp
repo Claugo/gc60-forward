@@ -22,7 +22,7 @@
     No claim of replacing industrial prime sieves.
 */
 
-// 1. QUESTA RIGA DEVE ESSERE LA PRIMA IN ASSOLUTO
+// 1. QUESTA RIGA DEVE ESSERE LA PRIMA IN ASSOLUTO per i sistemi windows con IDE Visualstudio.net
 #define _CRT_SECURE_NO_WARNINGS 
 
 #include <iostream>
@@ -42,7 +42,7 @@ typedef unsigned long long u64;
 // ----------------------------
 // Configurazione
 // ----------------------------
-const u64 CERCA_IN = 1000000000ULL; // 9 MILIARDI
+const u64 CERCA_IN = 1000000000ULL; // Testato fino a 100 Miliardi
 const int RESIDUI[] = { 1, 3, 7, 9, 13, 19, 21, 27, 31, 33, 37, 39, 43, 49, 51, 57 };
 const int NUM_RESIDUI = 16;
 
